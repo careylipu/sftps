@@ -5,12 +5,13 @@ import (
 	"encoding/base64"
 	"encoding/pem"
 	"fmt"
-	"github.com/pkg/sftp"
-	"golang.org/x/crypto/ssh"
 	"io"
 	"io/ioutil"
 	"net"
 	"os"
+
+	"github.com/pkg/sftp"
+	"golang.org/x/crypto/ssh"
 )
 
 type SecureFtp struct {
@@ -34,6 +35,9 @@ func (this *SecureFtp) connect() (err error) {
 
 	config := &ssh.ClientConfig{
 		User: this.params.user,
+		HostKeyCallback: func(hostname string, remote net.Addr, key ssh.PublicKey) error {
+			return nil
+		},
 	}
 
 	if this.params.useKey {
