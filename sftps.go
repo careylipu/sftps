@@ -11,11 +11,11 @@ type FtpResponse struct {
 }
 
 type Sftps struct {
-	state    int
-	protocol int
-	recv     interface{}
+	state     int
+	protocol  int
+	recv      interface{}
 	keepalive bool
-	isDebug  bool
+	isDebug   bool
 }
 
 func New(proto int, param interface{}) (sftps *Sftps, err error) {
@@ -69,8 +69,7 @@ func (this *Sftps) Connect() (res []*FtpResponse, err error) {
 			return
 		}
 		res = append(res, rs...)
-	} else
-	if this.protocol == SFTP {
+	} else if this.protocol == SFTP {
 		if err = this.recv.(*SecureFtp).connect(); err != nil {
 			return
 		}
@@ -85,8 +84,7 @@ func (this *Sftps) Quit() (res *FtpResponse, err error) {
 		if res, err = this.recv.(*Ftp).quit(); err != nil {
 			return
 		}
-	} else
-	if this.protocol == SFTP {
+	} else if this.protocol == SFTP {
 		if err = this.recv.(*SecureFtp).quit(); err != nil {
 			return
 		}
@@ -122,8 +120,7 @@ func (this *Sftps) List(baseDir string) (res []*FtpResponse, list string, err er
 			}
 			res = append(res, r)
 		}
-	} else
-	if this.protocol == SFTP {
+	} else if this.protocol == SFTP {
 		var sftp *SecureFtp
 		if recv, ok := this.recv.(*SecureFtp); ok {
 			sftp = recv
@@ -141,7 +138,6 @@ func (this *Sftps) List(baseDir string) (res []*FtpResponse, list string, err er
 	return
 }
 
-
 func (this *Sftps) Mkdir(p string) (res []*FtpResponse, err error) {
 	if this.state == OFFLINE {
 		err = errors.New("Connection is not established.")
@@ -150,7 +146,7 @@ func (this *Sftps) Mkdir(p string) (res []*FtpResponse, err error) {
 	if this.protocol == FTP || this.protocol == FTPS {
 		var ftp *Ftp
 		var r *FtpResponse
-		res = new([]*FtpResponse)
+		res = make([]*FtpResponse, 0)
 		if recv, ok := this.recv.(*Ftp); ok {
 			ftp = recv
 		}
@@ -165,8 +161,7 @@ func (this *Sftps) Mkdir(p string) (res []*FtpResponse, err error) {
 			}
 			res = append(res, r)
 		}
-	} else
-	if this.protocol == SFTP {
+	} else if this.protocol == SFTP {
 		var sftp *SecureFtp
 		if recv, ok := this.recv.(*SecureFtp); ok {
 			sftp = recv
@@ -190,7 +185,7 @@ func (this *Sftps) Rmdir(p string) (res []*FtpResponse, err error) {
 		return
 	}
 	if this.protocol == FTP || this.protocol == FTPS {
-		res = new([]*FtpResponse)
+		res = make([]*FtpResponse, 0)
 		var r *FtpResponse
 		var ftp *Ftp
 		if recv, ok := this.recv.(*Ftp); ok {
@@ -207,8 +202,7 @@ func (this *Sftps) Rmdir(p string) (res []*FtpResponse, err error) {
 			}
 			res = append(res, r)
 		}
-	} else
-	if this.protocol == SFTP {
+	} else if this.protocol == SFTP {
 		var sftp *SecureFtp
 		if recv, ok := this.recv.(*SecureFtp); ok {
 			sftp = recv
@@ -246,8 +240,7 @@ func (this *Sftps) Rename(old string, new string) (res []*FtpResponse, err error
 			}
 			res = append(res, r)
 		}
-	} else
-	if this.protocol == SFTP {
+	} else if this.protocol == SFTP {
 		var sftp *SecureFtp
 		if recv, ok := this.recv.(*SecureFtp); ok {
 			sftp = recv
@@ -264,9 +257,11 @@ func (this *Sftps) Rename(old string, new string) (res []*FtpResponse, err error
 	return
 }
 
-/**
+/*
+*
+
 	parameter's explain. local is the local path for the file, whether remote.
- */
+*/
 func (this *Sftps) Upload(local string, remote string) (res []*FtpResponse, len int64, err error) {
 	if this.state == OFFLINE {
 		err = errors.New("Connection is not established")
@@ -289,8 +284,7 @@ func (this *Sftps) Upload(local string, remote string) (res []*FtpResponse, len 
 			}
 			res = append(res, r)
 		}
-	} else
-	if this.protocol == SFTP {
+	} else if this.protocol == SFTP {
 		var sftp *SecureFtp
 		if recv, ok := this.recv.(*SecureFtp); ok {
 			sftp = recv
@@ -329,8 +323,7 @@ func (this *Sftps) Download(local string, remote string) (res []*FtpResponse, le
 			}
 			res = append(res, r)
 		}
-	} else
-	if this.protocol == SFTP {
+	} else if this.protocol == SFTP {
 		var sftp *SecureFtp
 		if recv, ok := this.recv.(*SecureFtp); ok {
 			sftp = recv
